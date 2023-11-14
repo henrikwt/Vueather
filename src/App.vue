@@ -55,7 +55,7 @@ nav a {
 nav a:first-of-type {
   border: 0;
 }
-
+/* 
 @media (min-width: 1024px) {
   header {
     display: flex;
@@ -81,5 +81,5 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
-}
+} */
 </style>
