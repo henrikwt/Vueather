@@ -1,53 +1,76 @@
 <script setup>
-    // const props = defineProps({
-    //     addedLocations: {
-    //         type: Array,
-    //         required: true
-    //     }
-    // })
-    // const handleOpenDetailedView = (id) => {
-    //     console.log('Open detailed view');
-    //     console.log(id);
-    // }
-    import { useRouter, useRoute } from 'vue-router'
-    import { computed } from 'vue';
-    const router = useRouter()
-    const route = useRoute()
-    const dataId = computed(() => {
-        return route.params.id
-    })
-    console.log(route.params.id);
+import { useRouter, useRoute } from 'vue-router'
+import { computed } from 'vue'
+import IconBack from './icons/IconBack.vue';
+const router = useRouter()
+const route = useRoute()
+const dataId = computed(() => {
+  return route.params.id
+})
+
+const getDataFromLocalStorage = () => {
+  const localStorageData = JSON.parse(localStorage.getItem('locations'))
+  let currentData
+  localStorageData.forEach((element) => {
+    if (element.id == route.params.id) {
+      currentData = element
+    }
+  })
+  return currentData
+}
+
+
+
+const selectedWeatherData = getDataFromLocalStorage()
+console.log(selectedWeatherData)
+
+const location = selectedWeatherData.locationName
+const temperature = Math.round(selectedWeatherData.current.temperature_2m)
+const apparentTemperature = Math.round(selectedWeatherData.current.apparent_temperature)
+const rain = Math.round(selectedWeatherData.current.rain)
+const todayHighest = Math.round(selectedWeatherData.daily.temperature_2m_max[0]);
+const todayLowest = Math.round(selectedWeatherData.daily.temperature_2m_min[0]);
+
 </script>
 
 <template>
+  <div class="details-container">
+    <!-- <h2>{{ $route.params.id }}</h2> -->
+    <h2>{{ location }}</h2>
+    <div class="parameter-block">Temp: {{ temperature }}°C</div>
+    <div class="parameter-block">Effektiv temp: {{ apparentTemperature }}°C</div>
+    <div class="parameter-block">Høyest: {{ todayHighest }}°C</div>
+    <div class="parameter-block">Lavest: {{ todayLowest }}°C</div>
+    <div class="parameter-block">Regn: {{ rain }}mm</div>
+    <RouterLink to="/">
+        <IconBack />
+    </RouterLink>
 
-    <div>
-        <h1>User {{ $route.params.id }}</h1>
-        HELLLO
-    </div>
-
+  </div>
 </template>
 
-<!-- Todo: 
-        1.  Make dynamic routes per favorite 
-        2.  Use the google map api to get location from place. (Does not necessarily need autocomplete, but make it easy to use)
-        3.  Make geolocation button not show if it's been clicked.
-        4.  If possible use their npm package for buttons etc.
-        5.  Display name of location, and current temp on the summary
-        6.  Display the other info on the detailed view, maybe make the elements addable/removable. 
-        Possibility: Do a small fetch for the front page, then each time you click on a location, do a fetch for that location.
-                     Then just do a minute interval fetch for the front page.
-
--->
 <style scoped>
-    .data-summarized {
-        padding: 1rem;
-        margin: 1rem;
-        font-size: 1.5rem;
-        border: 1px solid black;
-    }
-    .data-summarized:hover {
-        background-color: #f1f1f1;
-        cursor: pointer;
-    }
+.parameter-block {
+  background-color: #008ea6;
+  border: 1px solid #000;
+  padding: 1rem;
+  margin: 1rem;
+  font-size: 3rem;
+}
+.details-container {
+  border: 1px solid #000;
+  padding: 1rem;
+  margin: 1rem;
+  background-color: #009fe3;
+}
+.data-summarized {
+  padding: 1rem;
+  margin: 1rem;
+  font-size: 1.5rem;
+  border: 1px solid black;
+}
+.data-summarized:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
 </style>

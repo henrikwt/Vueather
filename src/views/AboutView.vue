@@ -1,6 +1,8 @@
 <template>
   <div class="about">
     <h1>This is an about page</h1>
+    <p>Vuether bruker data fra <a>Metiaimai</a></p>
+    <p>Stylingen er basert på <a>profil.</a></p>
   </div>
 </template>
 
