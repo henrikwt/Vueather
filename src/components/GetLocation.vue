@@ -1,4 +1,12 @@
 <script setup>
+import fetchWeatherData from '../utils/fetchWeatherData';
+
+defineProps({
+  homeLocation: {
+    type: Boolean,
+    required: true
+  }
+})
 
 const reverseGeoCoding = async (latitude, longitude) => {
   const response = await fetch(
@@ -16,16 +24,17 @@ const reverseGeoCoding = async (latitude, longitude) => {
   return null
 }
 
-const emit = defineEmits(['locationFetched'])
+const emit = defineEmits(['locationFetched', 'locationUpdated'])
 
-const fetchWeatherData = async (latitude, longitude, timezone) => {
-  const response = await fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,apparent_temperature,rain,cloud_cover&hourly=temperature_2m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=${timezone}`
-  )
-  return await response.json()
-}
+// const fetchWeatherData = async (latitude, longitude, timezone) => {
+//   const response = await fetch(
+//     `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,apparent_temperature,rain,cloud_cover&hourly=temperature_2m&daily=temperature_2m_max,temperature_2m_min,sunrise,sunset,uv_index_max&timezone=${timezone}`
+//   )
+//   return await response.json()
+// }
 
-const getGeoLocation = async () => {
+
+const getGeoLocation = async (update) => {
   const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -37,7 +46,12 @@ const getGeoLocation = async () => {
         )
         const cityName = await reverseGeoCoding(position.coords.latitude, position.coords.longitude)
         weatherData.locationName = cityName
-        emit('locationFetched', weatherData)
+        weatherData.home = true;
+        if (!update) {
+          emit('locationFetched', weatherData)
+        } else {
+          emit('locationUpdated', weatherData)
+        }
       },
       (error) => {
         console.log(error.message)
@@ -45,12 +59,15 @@ const getGeoLocation = async () => {
     )
   } else {
     console.log('Geolocation is not supported by this browser.')
+    // Set a variable here to disable the button.
   }
 }
 </script>
 
 <template>
   <div>
-    <button class="dfo-button dfo-button--cta" @click="getGeoLocation">Hent min lokasjon</button>
+    <button class="dfo-button dfo-button--cta" @click="getGeoLocation(false)" v-if="!homeLocation">Hent min lokasjon</button>
+    <!-- <button class="dfo-button dfo-button--cta" @click="getGeoLocation(true)" v-else>Oppdater min lokasjon</button> -->
+
   </div>
 </template>

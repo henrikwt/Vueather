@@ -18,7 +18,10 @@ Then have a special case for 7 day weather.
 - [ ] Double check the data fetching and displaying to make sure the information is relevant precise etc.
     Not just fetch an adress and pick the first in the array etc. Or at least have arguments for why it is done so
     In this postition, data fetching and accuracy is important.
-- [ ] Refetch data on homepage every 5 minutes
+- [x] Refetch data on homepage every 5 minutes
+- [ ] Finish about page
+- [ ] Push code to github
+- [ ] Use css variables for colors, instead of hardcoding them.
 - [ ] Remove input when there are 5 locations (keep it small to avoid too many API calls)
 - [ ] Make custom/dynamic styling based on the parameters, rain shows raincloud etc. cold temperature changes background color e.g.
 - [ ] Make a visual layout inside each route, which can be customized etc.

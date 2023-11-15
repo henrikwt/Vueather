@@ -2,6 +2,9 @@
 import { useRouter, useRoute } from 'vue-router'
 import { computed } from 'vue'
 import IconBack from './icons/IconBack.vue';
+import IconHome from './icons/IconHome.vue';
+import IconDelete from './icons/IconDelete.vue';
+
 const router = useRouter()
 const route = useRoute()
 const dataId = computed(() => {
@@ -36,16 +39,18 @@ const todayLowest = Math.round(selectedWeatherData.daily.temperature_2m_min[0]);
 <template>
   <div class="details-container">
     <!-- <h2>{{ $route.params.id }}</h2> -->
-    <h2>{{ location }}</h2>
+    <RouterLink to="/">
+        <IconBack />
+    </RouterLink>
+    <h2>{{ location }}
+      <IconHome v-if="selectedWeatherData?.home"/>
+    </h2>
     <div class="parameter-block">Temp: {{ temperature }}°C</div>
     <div class="parameter-block">Effektiv temp: {{ apparentTemperature }}°C</div>
     <div class="parameter-block">Høyest: {{ todayHighest }}°C</div>
     <div class="parameter-block">Lavest: {{ todayLowest }}°C</div>
     <div class="parameter-block">Regn: {{ rain }}mm</div>
-    <RouterLink to="/">
-        <IconBack />
-    </RouterLink>
-
+    
   </div>
 </template>
 

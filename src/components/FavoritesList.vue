@@ -36,14 +36,15 @@ const deleteLocation = (id) => {
       @click="($event) => handleOpenDetailedView(addedLocation)"
       :key="addedLocation.id"
     >
-      <h2>{{ addedLocation.locationName }}</h2>
+      <h2>{{ addedLocation.locationName }} 
+        <IconHome v-if="addedLocation?.home"/>
+      </h2>
       Temp: {{ Math.round(addedLocation.current.temperature_2m) }}°C, Effektiv temp:
       {{ addedLocation.current.apparent_temperature }}
       <button @click.stop="deleteLocation(addedLocation.id)">
         <IconDelete />
       </button>
     </div>
-    <IconHome />
     <IconSync />
   </div>
 </template>

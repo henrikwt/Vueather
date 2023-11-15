@@ -8,6 +8,8 @@
   --vt-c-black-mute: #282828;
 
   --vt-c-dark-blue: #012a4c;
+  --vt-c-middle-blue: #005b91;
+  --vt-c-sharp-blue: #009fe3;
 
   --vt-c-divider-light-1: rgba(60, 60, 60, 0.29);
   --vt-c-divider-light-2: rgba(60, 60, 60, 0.12);
@@ -57,7 +59,7 @@
 }
 
 body {
-  min-height: 100vh;
+  /* min-height: 100vh; */
   color: var(--color-text);
   background: var(--color-background);
   transition:

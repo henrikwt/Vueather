@@ -1,16 +1,18 @@
 <template>
-  <!-- <footer class="dfo-footer dfo-footer--compact">
+  <footer class="dfo-footer dfo-footer--compact">
     Laget med Vue og Vite
-  </footer> -->
+    <br>
+    Av <i>Henrik Tronstad</i> 
+  </footer>
 </template>
   
 <style scoped>
 .dfo-footer {
-  background-color: #012a4c;
+  background-color: var(--vt-c-dark-blue);
   padding: 3rem 0;
   text-align: center;
   color: #fff;
-  /* bottom: 0px;  */
+  flex: 0;
   width: 100%;
 }
 

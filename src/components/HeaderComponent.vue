@@ -29,7 +29,7 @@
 .vueather-text {
   /* align-self: center; */
   font-weight: 700;
-  color: #005b91;
+  color: var(--vt-c-middle-blue);
   text-transform: uppercase;
   margin-block-end: -26px;
   margin-left: -26px;
