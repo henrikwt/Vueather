@@ -4,23 +4,24 @@ import GetLocationFromInput from '../components/GetLocationFromInput.vue'
 import FavoritesList from '../components/FavoritesList.vue'
 import fetchWeatherData from '../utils/fetchWeatherData'
 
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const addedLocations = ref([])
-const interval = ref(null);
-const homeLocation = ref(false);
+const interval = ref(null)
+const homeLocation = ref(false)
+const REFETCH_DATA_INTERVAL_MS = 60000
 
 onMounted(() => {
   const savedLocations = JSON.parse(localStorage.getItem('locations'))
   if (savedLocations) {
     addedLocations.value = savedLocations
   }
-  refetchData();
-  interval.value = setInterval(refetchData, 60000)
+  refetchData()
+  interval.value = setInterval(refetchData, REFETCH_DATA_INTERVAL_MS)
 })
 
 onUnmounted(() => {
-  clearInterval(interval.value);
+  clearInterval(interval.value)
 })
 
 const refetchData = async () => {
@@ -28,41 +29,38 @@ const refetchData = async () => {
     addedLocations.value.forEach(async (location, index) => {
       // Also check if homeLocation is there.
       if (location?.home) {
-        homeLocation.value = true;
+        homeLocation.value = true
       }
-      const refetchedData = await fetchWeatherData(location.latitude, location.longitude, Intl.DateTimeFormat().resolvedOptions().timeZone);
-      const mergedObject = {...location};
-      for (const property in refetchedData ) {
-        mergedObject[property] = refetchedData[property];
+      const refetchedData = await fetchWeatherData(
+        location.latitude,
+        location.longitude,
+        Intl.DateTimeFormat().resolvedOptions().timeZone
+      )
+      const mergedObject = { ...location }
+      for (const property in refetchedData) {
+        mergedObject[property] = refetchedData[property]
       }
-      addedLocations.value[index] = mergedObject;
+      addedLocations.value[index] = mergedObject
       saveLocationsToLocalStorage()
-    });
+    })
   }
 }
 
 const handleLocationFetched = async (weatherData) => {
   const response = await weatherData
   if (response?.home) {
-    homeLocation.value = true;
+    homeLocation.value = true
   }
-  response.id = crypto.randomUUID()
-  addedLocations.value.push(response)
+  // response.id = crypto.randomUUID()
+  response.id = Math.floor(Math.random() * 1000000)
+  addedLocations.value.unshift(response)
   saveLocationsToLocalStorage()
 }
-// const handleLocationUpdated = async (id) => {
-// Function to allow updating the geolocation of the device in case it moves around.
-// This can just be done by deleting and clicking the button again.
-// It could be nice to automatically update the "home location", each time the app is opened.
-// }
 
 const handleDeleteLocation = (id) => {
-  console.log('Delete location')
-  console.log(id)
-  
   addedLocations.value = addedLocations.value.filter((location) => {
     if (location?.home && location.id === id) {
-      homeLocation.value = false;
+      homeLocation.value = false
     }
     return location.id !== id
   })
@@ -76,8 +74,41 @@ const saveLocationsToLocalStorage = () => {
 
 <template>
   <main>
-    <FavoritesList :addedLocations="addedLocations" @deleteLocation="handleDeleteLocation" />
-    <GetLocation @locationFetched="handleLocationFetched" @locationUpdated="handleLocationUpdated" :homeLocation="homeLocation" />
-    <GetLocationFromInput @locationFetched="handleLocationFetched" />
+    <Suspense>
+      <template #default>
+        <FavoritesList :addedLocations="addedLocations" @deleteLocation="handleDeleteLocation" />
+      </template>
+      <template #fallback>
+        <p>Loading...</p>
+      </template>
+    </Suspense>
+    <h2 v-if="addedLocations.length < 1">Legg til en lokasjon for å få værdata!</h2>
+    <div class="get-location-container">
+      <div>
+        <GetLocationFromInput @locationFetched="handleLocationFetched" />
+        <GetLocation
+          @locationFetched="handleLocationFetched"
+          @locationUpdated="handleLocationUpdated"
+          :homeLocation="homeLocation"
+        />
+      </div>
+    </div>
   </main>
 </template>
+
+<style scoped>
+h2 {
+  margin: 1rem;
+  text-align: center;
+}
+.get-location-container {
+  margin: 0 calc(100vw * 0.25);
+  margin-bottom: 2rem;
+}
+@media (max-width: 650px) {
+  .get-location-container {
+    margin: 0 2rem;
+    margin-bottom: 2rem;
+  }
+}
+</style>
