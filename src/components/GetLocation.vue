@@ -12,7 +12,7 @@ const reverseGeoCoding = async (latitude, longitude) => {
   try {
     const response = await fetch(
       `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&location_type=APPROXIMATE&result_type=locality&key=${
-        import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+        import.meta.env.SECRET_GOOGLE_MAPS_API_KEY
       }`
     )
     const data = await response.json()

@@ -5,7 +5,7 @@ import fetchWeatherData from '../utils/fetchWeatherData'
 const geoCoding = async (address) => {
   const response = await fetch(
     `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${
-      import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+      import.meta.env.SECRET_GOOGLE_MAPS_API_KEY
     }`
   )
   return await response.json()
